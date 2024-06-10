@@ -1,11 +1,11 @@
-'use client'
-import { FC, HTMLAttributes, useContext, useRef, useState } from 'react'
-import TextareaAutosize from 'react-textarea-autosize'
+"use client"
+import { FC, HTMLAttributes, useContext, useRef, useState } from "react"
+import TextareaAutosize from "react-textarea-autosize"
 
-import { cn } from '@/lib/utils'
-import { useMutation } from '@tanstack/react-query'
-import { Message } from '@/lib/validators/message'
-import { MessagesContext } from '@/context/messages'
+import { cn } from "@/lib/utils"
+import { useMutation } from "@tanstack/react-query"
+import { Message } from "@/lib/validators/message"
+import { MessagesContext } from "@/context/messages"
 
 interface ChatInputProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -13,7 +13,7 @@ interface ChatInputProps extends HTMLAttributes<HTMLDivElement> {}
 // 1. send data to the server with React Query
 // 2. get data as stream data
 export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
-	const [input, setInput] = useState('')
+	const [input, setInput] = useState("")
 	const textareaRef = useRef<null | HTMLTextAreaElement>(null)
 
 	const {
@@ -29,9 +29,9 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 		// fetch functions
 		// lib/validots/Message: validatopn with zod
 		mutationFn: async (message: Message) => {
-			const response = await fetch('/api/message', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json' },
+			const response = await fetch("/api/message", {
+				method: "POST",
+				headers: { "Content-type": "application/json" },
 				body: JSON.stringify({ messages }),
 			})
 
@@ -44,14 +44,14 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 
 		//
 		onSuccess: async (stream) => {
-			if (!stream) throw new Error('Stream is not defined')
+			if (!stream) throw new Error("Stream is not defined")
 
 			const id = crypto.randomUUID()
 
 			const responseMessage: Message = {
 				id,
 				isUserMessage: false,
-				text: '',
+				text: "",
 			}
 
 			addMessage(responseMessage)
@@ -71,7 +71,7 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 
 				// clean up
 				setIsMessageUpdating(false)
-				setInput('')
+				setInput("")
 
 				setTimeout(() => {
 					textareaRef.current?.focus()
@@ -81,13 +81,13 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 	})
 
 	return (
-		<div {...props} className={cn('border-t border-zinc-300', className)}>
+		<div {...props} className={cn("border-t border-zinc-300", className)}>
 			{/* flex-1: fills out the remaining space */}
 			<div className="relative mt-4 flex-1 overflow-hidden rounded-lg border-none outline-none">
 				<TextareaAutosize
 					ref={textareaRef}
 					onKeyDown={(e) => {
-						if (e.key === 'Enter' && !e.shiftKey) {
+						if (e.key === "Enter" && !e.shiftKey) {
 							e.preventDefault()
 
 							const message = {
@@ -97,6 +97,8 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 							}
 
 							sendMessage(message)
+
+							setInput("")
 						}
 					}}
 					rows={2}
